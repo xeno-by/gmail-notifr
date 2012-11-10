@@ -184,9 +184,14 @@ class GNChecker
         NSLocalizedString("Unread Messages") % @messageCount
 
       if @account.growl
-        notifyGrowl(@account.username, [unreadCount, info].join("\n\n"))
+        # notifyGrowl(@account.username, [unreadCount, info].join("\n\n"))
+        topic = @messageCount == 0 ? "No unread mesages" : @messages[0][:author]
+        if (@messageCount > 1)
+          topic += " and others "
+        end
+        notifyGrowl(topic, info)
       end
-      notifyNotificationCenter(@account.username, unreadCount)
+      #notifyNotificationCenter(@account.username, unreadCount)
     end
     if shouldNotify && @account.sound != GNSound::SOUND_NONE && sound = NSSound.soundNamed(@account.sound)
       sound.play
