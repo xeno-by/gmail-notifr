@@ -175,7 +175,7 @@ class GNChecker
     notifyMenuUpdate
 
     if shouldNotify
-      info = @messages.map { |m| "#{m[:subject]}\nFrom: #{m[:author]}" }.join("\n#{'-' * 30}\n\n")
+      info = @messages.map { |m| "#{m[:subject]} \nFrom: #{m[:author]}" }.join("\n#{'-' * 30}\n\n")
       if @messageCount > @messages.size
         info += "\n\n..."
       end
@@ -184,9 +184,14 @@ class GNChecker
         NSLocalizedString("Unread Messages") % @messageCount
 
       if @account.growl
-        notifyGrowl(@account.username, [unreadCount, info].join("\n\n"))
+        # notifyGrowl(@account.username, [unreadCount, info].join("\n\n"))
+        title = @messageCount == 0 ? "No unread mesages" : @messages[0][:author]
+        if (@messageCount > 1)
+          title += " and others "
+        end
+        notifyGrowl(title, info)
       end
-      notifyNotificationCenter(@account.username, unreadCount)
+      #notifyNotificationCenter(@account.username, unreadCount)
     end
     if shouldNotify && @account.sound != GNSound::SOUND_NONE && sound = NSSound.soundNamed(@account.sound)
       sound.play
@@ -208,7 +213,8 @@ class GNChecker
   end
 
   def notifyGrowl(title, desc)
-    GrowlApplicationBridge.notifyWithTitle(title,
+    #GrowlApplicationBridge.notifyWithTitle(title,
+    GrowlApplicationBridge.notifyWithTitle("",
       description: desc,
       notificationName: "new_messages",
       iconData: nil,
