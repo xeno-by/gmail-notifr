@@ -189,9 +189,9 @@ class GNChecker
         if (@messageCount > 1)
           title += " and others "
         end
-        notifyGrowl(title, info)
+        # notifyGrowl(title, info)
       end
-      #notifyNotificationCenter(@account.username, unreadCount)
+      notifyNotificationCenter(@account.username, unreadCount)
     end
     if shouldNotify && @account.sound != GNSound::SOUND_NONE && sound = NSSound.soundNamed(@account.sound)
       sound.play
